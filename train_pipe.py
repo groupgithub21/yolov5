@@ -466,7 +466,8 @@ if __name__ == '__main__':
             'batch_size':2,
             'epochs':2,
             'data':'data/maritime.yaml',
-            'queue_name':'gpu_glue_q'
+            'queue_name':'gpu_glue_q',
+            'evolve':False
         }
 
     args=task.connect(args)
@@ -511,7 +512,10 @@ if __name__ == '__main__':
     opt.batch_size=args['batch_size']
     opt.epochs=args['epochs']
     opt.data=args['data']
+    opt.evolve=args['evolve']
+    #Some issue , Fix to False
     opt.resume=False
+
     print(f'args\t{args}')
     print(f'opt\t{opt}')
     print(f'Reading in data from clearml')
