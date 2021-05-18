@@ -98,6 +98,7 @@ def train(hyp, opt, device, tb_writer=None,clearml_path=None):
         check_dataset(data_dict)  # check
     # train_path = data_dict['train']
     # test_path = data_dict['val']
+    print(f'In Training: clearml_path:\t{clearml_path}')
     train_path = clearml_path['train']
     test_path = clearml_path['val']
     # Freeze
@@ -458,7 +459,7 @@ if __name__ == '__main__':
     from clearml import Task, Logger
     # Connecting ClearML with the current process,
     # from here on everything is logged automatically
-    task = Task.init(project_name='pipe_it_up_hyp', task_name='base')
+    task = Task.init(project_name='pipe_it_up_hyp', task_name='base',output_uri='s3://192.168.180.245:30005/clearml/model')
     task.set_base_docker('ultralytics/yolov5:latest')
     args={
             'dataset_id':'',
@@ -529,6 +530,7 @@ if __name__ == '__main__':
     clearml_path={}
     clearml_path['train']=data_dir
     clearml_path['val']=data_dir
+    print(f'In Main: clearml_path:\t{clearml_path}')
 
     # Set DDP variables
     opt.world_size = int(os.environ['WORLD_SIZE']) if 'WORLD_SIZE' in os.environ else 1
@@ -572,6 +574,7 @@ if __name__ == '__main__':
     with open(opt.hyp) as f:
         hyp = yaml.safe_load(f)  # load hyps
 
+    assert(len(clearml_path)==2)
     # Train
     logger.info(opt)
     if not opt.evolve:
