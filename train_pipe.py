@@ -454,6 +454,23 @@ def train(hyp, opt, device, tb_writer=None,clearml_path=None):
 
 
 if __name__ == '__main__':
+    print(f'In main')
+    from clearml import Task, Logger
+    # Connecting ClearML with the current process,
+    # from here on everything is logged automatically
+    task = Task.init(project_name='pipe_it_up_hyp', task_name='base')
+    task.set_base_docker('ultralytics/yolov5:latest')
+    args={
+            'dataset_id':'',
+            'dataset_url':'http://192.168.180.150:30081/pipe_it_up/grayscale.4030799c8a0d493983f287b454a549b3/artifacts/dataset/ds_ece1c9373b924f4ca3719ee53afd4647.zip',
+            'batch_size':2,
+            'epochs':2,
+            'data':'data/maritime.yaml',
+            'queue_name':'gpu_glue_q'
+        }
+
+    args=task.connect(args)
+    task.execute_remotely()
     parser = argparse.ArgumentParser()
     parser.add_argument('--weights', type=str, default='yolov5s.pt', help='initial weights path')
     parser.add_argument('--cfg', type=str, default='', help='model.yaml path')
@@ -490,23 +507,6 @@ if __name__ == '__main__':
     parser.add_argument('--save_period', type=int, default=-1, help='Log model after every "save_period" epoch')
     parser.add_argument('--artifact_alias', type=str, default="latest", help='version of dataset artifact to be used')
     opt = parser.parse_args()
-
-    from clearml import Task, Logger
-    # Connecting ClearML with the current process,
-    # from here on everything is logged automatically
-    task = Task.init(project_name='pipe_it_up_hyp', task_name='base')
-    task.set_base_docker('ultralytics/yolov5:latest')
-    args={
-            'dataset_id':'',
-            'dataset_url':'http://192.168.180.150:30081/pipe_it_up/grayscale.4030799c8a0d493983f287b454a549b3/artifacts/dataset/ds_ece1c9373b924f4ca3719ee53afd4647.zip',
-            'batch_size':2,
-            'epochs':2,
-            'data':'data/maritime.yaml',
-            'queue_name':'gpu_glue_q'
-        }
-
-    args=task.connect(args)
-    task.execute_remotely()
 
     print(f'args\t{args}')
     print(f'opt\t{opt}')
