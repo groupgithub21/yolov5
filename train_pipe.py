@@ -657,7 +657,7 @@ if __name__ == '__main__':
                 hyp[k] = round(hyp[k], 5)  # significant digits
 
             # Train mutation
-            results = train(hyp.copy(), opt, device,clearml_path)
+            results = train(hyp.copy(), opt, device,clearml_path.copy())
 
             # Write mutation results
             print_mutation(hyp.copy(), results, yaml_file, opt.bucket)
