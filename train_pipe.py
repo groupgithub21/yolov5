@@ -459,7 +459,7 @@ if __name__ == '__main__':
     from clearml import Task, Logger
     # Connecting ClearML with the current process,
     # from here on everything is logged automatically
-    task = Task.init(project_name='pipe_it_up_hyp', task_name='base',output_uri='s3://192.168.180.245:30005/clearml/model')
+    task = Task.init(project_name='pipe_1', task_name='base',output_uri='s3://192.168.180.245:30005/clearml/model')
     task.set_base_docker('ultralytics/yolov5:latest')
     args={
             'dataset_id':'',
