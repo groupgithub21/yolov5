@@ -508,6 +508,10 @@ if __name__ == '__main__':
     parser.add_argument('--artifact_alias', type=str, default="latest", help='version of dataset artifact to be used')
     opt = parser.parse_args()
 
+    opt.batch_size=args['batch_size']
+    opt.epochs=args['epochs']
+    opt.data=args['data']
+    opt.resume=False
     print(f'args\t{args}')
     print(f'opt\t{opt}')
     print(f'Reading in data from clearml')
