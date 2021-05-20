@@ -39,6 +39,7 @@ logger = logging.getLogger(__name__)
 
 
 def train(hyp, opt, device, tb_writer=None,clearml_path=None):
+    print(f'Entering Train')
     logger.info(colorstr('hyperparameters: ') + ', '.join(f'{k}={v}' for k, v in hyp.items()))
     save_dir, epochs, batch_size, total_batch_size, weights, rank = \
         Path(opt.save_dir), opt.epochs, opt.batch_size, opt.total_batch_size, opt.weights, opt.global_rank
@@ -103,6 +104,9 @@ def train(hyp, opt, device, tb_writer=None,clearml_path=None):
     test_path = clearml_path['val']
     # Freeze
     freeze = []  # parameter names to freeze (full or partial)
+    if clearml_path['freeze_backbone']:
+        freeze=['model.%s.' % x for x in range(10)]
+    print(f"Freeze\t{freeze}")
     for k, v in model.named_parameters():
         v.requires_grad = True  # train all layers
         if any(x in k for x in freeze):
@@ -459,7 +463,10 @@ if __name__ == '__main__':
     from clearml import Task, Logger
     # Connecting ClearML with the current process,
     # from here on everything is logged automatically
-    task = Task.init(project_name='pipe_1', task_name='base',output_uri='s3://192.168.180.245:30005/clearml/model')
+    # task = Task.init(project_name='pipe_1', task_name='base',output_uri='s3://192.168.180.245:30005/clearml/model')
+    Task.force_requirements_env_freeze(False)
+    task = Task.init(project_name='playground', task_name='base')
+
     task.set_base_docker('ultralytics/yolov5:latest')
     args={
             'dataset_id':'',
@@ -468,7 +475,8 @@ if __name__ == '__main__':
             'epochs':2,
             'data':'data/maritime.yaml',
             'queue_name':'gpu_glue_q',
-            'evolve':False
+            'evolve':False,
+            'freeze_backbone':False
         }
 
     args=task.connect(args)
@@ -530,6 +538,7 @@ if __name__ == '__main__':
     clearml_path={}
     clearml_path['train']=data_dir
     clearml_path['val']=data_dir
+    clearml_path['freeze_backbone']=args['freeze_backbone']
     print(f'In Main: clearml_path:\t{clearml_path}')
 
     # Set DDP variables
@@ -574,7 +583,7 @@ if __name__ == '__main__':
     with open(opt.hyp) as f:
         hyp = yaml.safe_load(f)  # load hyps
 
-    assert(len(clearml_path)==2)
+    # assert(len(clearml_path)==2)
     # Train
     logger.info(opt)
     if not opt.evolve:
@@ -657,12 +666,13 @@ if __name__ == '__main__':
                 hyp[k] = round(hyp[k], 5)  # significant digits
 
             # Train mutation
-            results = train(hyp.copy(), opt, device,clearml_path.copy())
+            results = train(hyp.copy(), opt, device,tb_writer=None,clearml_path=clearml_path.copy())
 
             # Write mutation results
             print_mutation(hyp.copy(), results, yaml_file, opt.bucket)
 
         # Plot results
         plot_evolution(yaml_file)
+        task.upload_artifact('hyper_file', artifact_object=yaml_file)
         print(f'Hyperparameter evolution complete. Best results saved as: {yaml_file}\n'
               f'Command to train a new model with these hyperparameters: $ python train.py --hyp {yaml_file}')
