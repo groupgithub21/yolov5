@@ -43,7 +43,7 @@ def train(hyp, opt, device, tb_writer=None,clearml_path=None):
     logger.info(colorstr('hyperparameters: ') + ', '.join(f'{k}={v}' for k, v in hyp.items()))
     save_dir, epochs, batch_size, total_batch_size, weights, rank = \
         Path(opt.save_dir), opt.epochs, opt.batch_size, opt.total_batch_size, opt.weights, opt.global_rank
-
+    print(f'CHECK\t{opt.weights}\t{weights}')
     # Directories
     wdir = save_dir / 'weights'
     wdir.mkdir(parents=True, exist_ok=True)  # make dir
@@ -464,10 +464,17 @@ if __name__ == '__main__':
     # Connecting ClearML with the current process,
     # from here on everything is logged automatically
     # task = Task.init(project_name='pipe_1', task_name='base',output_uri='s3://192.168.180.245:30005/clearml/model')
-    Task.force_requirements_env_freeze(False)
-    task = Task.init(project_name='playground', task_name='base')
+    # task = Task.init(project_name='playground', task_name='base')
+    task = Task.create(project_name='hyper_it', task_name='base2',
+                repo='https://github.com/groupgithub21/yolov5.git',
+                working_directory='.',
+                script='train_pipe.py',
+                commit='1bdabb69fc90b88759ca59e20ec07528900e2765',
+                docker='ultralytics/yolov5:latest',
+                requirements_file='requirements.txt'
+                )
 
-    task.set_base_docker('ultralytics/yolov5:latest')
+    # task.set_base_docker('ultralytics/yolov5:latest')
     args={
             'dataset_id':'',
             'dataset_url':'http://192.168.180.150:30081/pipe_it_up/grayscale.4030799c8a0d493983f287b454a549b3/artifacts/dataset/ds_ece1c9373b924f4ca3719ee53afd4647.zip',
