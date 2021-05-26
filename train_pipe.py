@@ -477,7 +477,7 @@ if __name__ == '__main__':
     # task.set_base_docker('ultralytics/yolov5:latest')
     args={
             'dataset_id':'',
-            'dataset_url':'http://192.168.180.150:30081/pipe_it_up/grayscale.4030799c8a0d493983f287b454a549b3/artifacts/dataset/ds_ece1c9373b924f4ca3719ee53afd4647.zip',
+            'dataset_url':'',
             'batch_size':2,
             'epochs':2,
             'data':'data/maritime.yaml',

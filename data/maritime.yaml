@@ -14,7 +14,7 @@ train: .
 val: .
 
 # number of classes
-nc: 11
+nc: 12
 
 # class names
-names: ['Nothing','Ferry','Buoy','Vessel','Speed_boat','Boat','Kayak','Sail_boat','Swimming_person','Flying_bird/plane','Other']
+names: ['Nothing','Ferry','Buoy','Vessel','Speed_boat','Boat','Kayak','Sail_boat','Swimming_person','Flying_bird/plane','Other','iron-ore']
