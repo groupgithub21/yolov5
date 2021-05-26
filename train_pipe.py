@@ -465,11 +465,11 @@ if __name__ == '__main__':
     # from here on everything is logged automatically
     # task = Task.init(project_name='pipe_1', task_name='base',output_uri='s3://192.168.180.245:30005/clearml/model')
     # task = Task.init(project_name='playground', task_name='base')
-    task = Task.create(project_name='hyper_it', task_name='base2',
+    task = Task.create(project_name='pipe_2', task_name='base',
                 repo='https://github.com/groupgithub21/yolov5.git',
                 working_directory='.',
                 script='train_pipe.py',
-                commit='1bdabb69fc90b88759ca59e20ec07528900e2765',
+                commit='de80983c4f1f06cdb2eade1dd0681bc5f6c8b989',
                 docker='ultralytics/yolov5:latest',
                 requirements_file='requirements.txt'
                 )
