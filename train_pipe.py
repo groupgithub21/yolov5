@@ -463,23 +463,22 @@ if __name__ == '__main__':
     from clearml import Task, Logger
     # Connecting ClearML with the current process,
     # from here on everything is logged automatically
-    # task = Task.init(project_name='pipe_1', task_name='base',output_uri='s3://192.168.180.245:30005/clearml/model')
-    '''
-    task = Task.init(project_name='pipe_2', task_name='base')
+    task = Task.init(project_name='pipe_3', task_name='base',output_uri='s3://192.168.180.245:30005/clearml/model')
     task.set_base_docker('ultralytics/yolov5:latest')
     '''
-    task = Task.create(project_name='pipe_2', task_name='base',
+    task = Task.create(project_name='pipe_3', task_name='base',
                 repo='https://github.com/groupgithub21/yolov5.git',
                 working_directory='.',
                 script='train_pipe.py',
-                commit='de80983c4f1f06cdb2eade1dd0681bc5f6c8b989',
+                commit='b9e6fbc9cf4daac812252afb9f08cceabbdb8932',
                 docker='ultralytics/yolov5:latest',
-                requirements_file='requirements.txt'
+                requirements_file='requirements.txt',
+                output_uri
                 )
-   
+    '''
     args={
             'dataset_id':'',
-            'dataset_url':'http://192.168.180.150:30081/pipe_2/grayscale.a73b1427b71643e7858a86b0d7b42c17/artifacts/dataset/ds_eb60261d097a4f3cae01f63c07105eb9.zip',
+            'dataset_url':'',
             'batch_size':2,
             'epochs':2,
             'data':'data/maritime.yaml',
