@@ -463,7 +463,7 @@ if __name__ == '__main__':
     from clearml import Task, Logger
     # Connecting ClearML with the current process,
     # from here on everything is logged automatically
-    task = Task.init(project_name='pipe_3', task_name='base',output_uri='s3://192.168.180.245:30005/clearml/model')
+    task = Task.init(project_name='pipe_3_hype', task_name='base',output_uri='s3://192.168.180.245:30005/clearml/model')
     task.set_base_docker('ultralytics/yolov5:latest')
     '''
     task = Task.create(project_name='pipe_3', task_name='base',
@@ -484,7 +484,8 @@ if __name__ == '__main__':
             'data':'data/maritime.yaml',
             'queue_name':'gpu_glue_q',
             'evolve':False,
-            'freeze_backbone':False
+            'freeze_backbone':False,
+            'hyp':'data/hyp_evolved.yaml'
         }
 
     args=task.connect(args)
@@ -530,6 +531,7 @@ if __name__ == '__main__':
     opt.epochs=args['epochs']
     opt.data=args['data']
     opt.evolve=args['evolve']
+    opt.hyp=args['hyp']
     #Some issue , Fix to False
     opt.resume=False
 
