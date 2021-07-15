@@ -100,10 +100,10 @@ class Ensemble(nn.ModuleList):
     def __init__(self):
         super(Ensemble, self).__init__()
 
-    def forward(self, x, augment=False):
+    def forward(self, x, augment=False, profile=False, visualize=False):
         y = []
         for module in self:
-            y.append(module(x, augment)[0])
+            y.append(module(x, augment, profile, visualize)[0])
         # y = torch.stack(y).max(0)[0]  # max ensemble
         # y = torch.stack(y).mean(0)  # mean ensemble
         y = torch.cat(y, 1)  # nms ensemble
@@ -116,8 +116,7 @@ def attempt_load(weights, map_location=None, inplace=True):
     # Loads an ensemble of models weights=[a,b,c] or a single model weights=[a] or weights=a
     model = Ensemble()
     for w in weights if isinstance(weights, list) else [weights]:
-        attempt_download(w)
-        ckpt = torch.load(w, map_location=map_location)  # load
+        ckpt = torch.load(attempt_download(w), map_location=map_location)  # load
         model.append(ckpt['ema' if ckpt.get('ema') else 'model'].float().fuse().eval())  # FP32 model
 
     # Compatibility updates
