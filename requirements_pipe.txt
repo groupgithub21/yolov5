@@ -1,0 +1,5 @@
+# pip install -r requirements.txt
+
+# base ----------------------------------------
+clearml >=0.17.5
+boto3>=1.9
