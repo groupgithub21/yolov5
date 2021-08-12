@@ -463,7 +463,7 @@ if __name__ == '__main__':
     from clearml import Task, Logger
     # Connecting ClearML with the current process,
     # from here on everything is logged automatically
-    task = Task.init(project_name='maritime_training', task_name='base',output_uri='s3://192.168.180.245:30005/clearml/model')
+    task = Task.init(project_name='aircraft_training', task_name='base',output_uri='s3://192.168.180.245:30005/clearml/model')
     task.set_base_docker('ultralytics/yolov5@sha256:e200e08a2e02dd3897890f7c46b088d89b611388351409e4626ee6bb735b39b7')
     '''
     task = Task.create(project_name='pipe_3', task_name='base',
@@ -537,6 +537,7 @@ if __name__ == '__main__':
 
     print(f'args\t{args}')
     print(f'opt\t{opt}')
+    task.upload_artifact('data_yaml', artifact_object=args['data'])
     print(f'Reading in data from clearml')
     from clearml import Dataset,StorageManager
     print(f"CHECK dataset url\t{args['dataset_url']}")
